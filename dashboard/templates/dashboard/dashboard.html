@@ -1,1 +1,46 @@
-Hello Dashboard
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <title>Audio Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    audio {
+      width: 300px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Audio Player</h1>
+  <audio id="myAudio" controls>
+    <source src="{% static 'audio/speech.mp3' %}" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var audio = document.getElementById('myAudio');
+
+      // Event listener for when the audio starts playing
+      audio.addEventListener('play', function () {
+        console.log('Audio started playing');
+      });
+
+      // Event listener for when the audio stops playing
+      audio.addEventListener('pause', function () {
+        console.log('Audio stopped playing');
+      });
+    });
+  </script>
+</body>
+</html>
