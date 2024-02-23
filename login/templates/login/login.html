@@ -1,19 +1,39 @@
-<h1> Login Page </h1>
-
-<div class="g-signin2" data-onsuccess="onSignIn"></div>
-
-<a href="#" onclick="signOut();">Sign out</a>
-
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<meta name="google-signin-client_id" content="535141752040-8kd6o3mlc962d5ov0sos2pmk4adifgoj.apps.googleusercontent.com">
-
-<script>
-  function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-  }
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Google</title>
+    <!-- Include the Google Sign-In JavaScript library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        /* Optional: Style for the sign-in button */
+        .g_id_signin {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login with Google</h1>
+    
+    <!-- Google Sign-In container -->
+    <div id="g_id_onload"
+         data-client_id="535141752040-mi8n0429m8b21o78eqf16gp5h4ur7m94.apps.googleusercontent.com"
+         data-context="signin"
+         data-login_uri="https://autoexam.app/"
+         data-auto_select="true"
+         data-itp_support="true">
+    </div>
+    
+    <!-- Optional: Add a sign-in button -->
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-size="large">
+    </div>
+</body>
+</html>
 
 
