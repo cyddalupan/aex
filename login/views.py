@@ -1,52 +1,84 @@
-from venv import logger
-from django.shortcuts import render
+import random
+from django.urls import reverse
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from captcha.fields import CaptchaField
+from django.contrib import messages
 
-from .forms import ContactForm
+from shared_functions import SendEmail
+from .models import EmailUser
+
+from .forms import EmailLoginForm, LoginCodeVerificationForm
 
 # Create your views here.
 def login(request):
   if request.method == 'POST':
-      form = ContactForm(request.POST)
-      if form.is_valid():
-        print("Form data: %s", form.cleaned_data)
+    form = EmailLoginForm(request.POST)
+    if form.is_valid():
+      print("Form data: %s", form.cleaned_data)
+      print("Email data: %s", form.email)
+      vcode = ''.join(random.choices('0123456789', k=6))
+      if EmailUser.objects.filter(email=form.email).exists():
+        user = EmailUser.objects.get(email=form.email)
+        user.verify_code = vcode
+      else:
+        user = EmailUser(email=form.email, verify_code=vcode)
+      user.save()
+      url = reverse('send-verification-code', args=[user.id])
+      request.session['allow_send_email'] = True
+      return redirect(url)
   else:
-      form = ContactForm()
+    # TODO: Check cookie or session
+      # TODO: Login user and redirect
+    form = EmailLoginForm()
   return render(request, 'login/login.html', {'form': form})
+
+def sendVerificationCode(request, user_id):
+  if request.session.get('allow_send_email', False):
+    try:
+      user = EmailUser.objects.get(pk=user_id)
+      verify_code = user.verify_code
+      to = user.email
+      subject = "Your AutoExam Verification Code"
+      body =  f'''
+      Thank you for choosing AutoExam!
+
+      To ensure the security of your account, we require a six-digit verification code. Please use the following code to complete the verification process:
+
+      Verification Code: [{verify_code}]
+
+      Please enter this code within the app to confirm your identity and access your account.
+
+      If you did not request this code or need any assistance, please don't hesitate to contact our support team at [autoexamapp@gmail.com]. We're here to help!
+
+      Best regards,
+      The AutoExam Team
+      '''
+      SendEmail(to, subject, body)
+      return redirect('verify-login')
+    except EmailUser.DoesNotExist:
+      messages.error(request, "User does not exist.")
+      return redirect('content/error-message/')
+  else:
+    return redirect(reverse(''))
+
+def verifyLogin(request):
+  if request.method == 'POST':
+    ## TODO: compare code if true
+      ## TODO: Check if keep me logged is check then store cookie if active
+        ## TODO: Redirect and save long term cookie
+      ## TODO: not stay logged
+        ## TODO: Redirect save and Cookie with expiration
+    ## TODO: failed return error
+  
+  ## TODO: enter verify page
+  ## TODO: Keep me logged in
+  ## TODO: confirm 
+  form = LoginCodeVerificationForm()
+  return render(request, 'login/login.html', {'form': form})
+
+## TODO: Logout
+  ## TODO: DELETE COOKIE
 
 @csrf_exempt
 def googleLogin(request):
   return render(request, 'login/google_login.html')
-
-def sendEmail(request):
-  # Email configuration
-  email_sender = 'autoexamapp@gmail.com'
-  email_receiver = 'cydmdalupan@gmail.com'
-  email_subject = 'Subject: First Test Email'
-  email_body = 'Your email body goes here.'
-
-  # Create a MIMEText object to represent the email content
-  msg = MIMEMultipart()
-  msg['From'] = email_sender
-  msg['To'] = email_receiver
-  msg['Subject'] = email_subject
-
-  # Attach the email body
-  msg.attach(MIMEText(email_body, 'plain'))
-
-  # Connect to the SMTP server (e.g., Gmail's SMTP server)
-  smtp_server = 'smtp.gmail.com'
-  smtp_port = 587
-  smtp_username = 'autoexamapp@gmail.com'
-  smtp_password = 'tqzd atpd ewum qcct'
-
-  with smtplib.SMTP(smtp_server, smtp_port) as server:
-      server.starttls()  # Start TLS encryption
-      server.login(smtp_username, smtp_password)
-      server.sendmail(email_sender, email_receiver, msg.as_string())
-
-  print('Email sent successfully.')

@@ -1,8 +1,10 @@
 from django import forms
 from captcha.fields import CaptchaField
 
-class ContactForm(forms.Form):
-    name = forms.CharField(label='Your Name', max_length=100)
+class EmailLoginForm(forms.Form):
     email = forms.EmailField(label='Your Email')
-    message = forms.CharField(label='Your Message', widget=forms.Textarea)
     captcha = CaptchaField()
+
+class LoginCodeVerificationForm(forms.Form):
+    verification_code = forms.CharField(label='Verification Code', max_length=6, min_length=6, widget=forms.TextInput(attrs={'placeholder': 'Enter 6-digit code'}))
+    keep_logged_in = forms.BooleanField(label='Keep me logged in', required=False)
