@@ -23,4 +23,7 @@ urlpatterns = [
     path('', include('login.urls')),
     path('', include('dashboard.urls')),
     path('content/', include('content.urls')),
+
+    # Special URLS
+    path('captcha/', include('captcha.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, fullaname, password=None, **extra_fields):
@@ -48,3 +48,20 @@ class CustomUser(AbstractBaseUser):
 
     def __str__(self):
         return self.fullaname
+
+class EmailUser(AbstractBaseUser):
+    id = models.AutoField(primary_key=True)
+    email = models.EmailField(unique=True)
+    fullname = models.CharField(max_length=255)
+    verify_code = models.CharField(max_length=6, blank=True, null=True)
+    login_token = models.CharField(max_length=100, blank=True, null=True)
+    date_last_login = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['fullname']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
