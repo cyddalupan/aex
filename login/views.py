@@ -53,7 +53,8 @@ def sendVerificationCode(request, user_id):
       Best regards,
       The AutoExam Team
       '''
-      SendEmail(to, subject, body)
+      # Fix send email
+      # SendEmail(to, subject, body)
       url = reverse('verify-login', args=[user_id])
       return redirect(url)
     except EmailUser.DoesNotExist:
@@ -65,20 +66,21 @@ def verifyLogin(request, user_id):
   user = EmailUser.objects.get(pk=user_id)
   if request.method == 'POST':
     form = LoginCodeVerificationForm(request.POST)
-    if form.cleaned_data['verification_code'] == user.verify_code:
-      response = HttpResponse("Cookie set")
-      login_token = generate_random_string(99)
-      user.login_token = login_token
-      user.save()
-      response.set_cookie('user_id', user_id)
-      if form.cleaned_data['keep_logged_in']:
-        response.set_cookie('login_token', login_token)
+    if form.is_valid():
+      if form.cleaned_data['verification_code'] == user.verify_code:
+        response = HttpResponse("Cookie set")
+        login_token = generate_random_string(99)
+        user.login_token = login_token
+        user.save()
+        response.set_cookie('user_id', user_id)
+        if form.cleaned_data['keep_logged_in']:
+          response.set_cookie('login_token', login_token)
+        else:
+          expiration_time = datetime.now() + timedelta(hours=4)
+          response.set_cookie('login_token', login_token, expires=expiration_time)
+        return redirect(reverse('dashboard'))
       else:
-        expiration_time = datetime.now() + timedelta(hours=4)
-        response.set_cookie('login_token', login_token, expires=expiration_time)
-      return redirect(reverse('dashboard/'))
-    else:
-      form.add_error("verification_code", "Invalid verification code. Please try again.")
+        form.add_error("verification_code", "Invalid verification code. Please try again.")
   else:
     form = LoginCodeVerificationForm()
   return render(request, 'login/login.html', {'form': form})
