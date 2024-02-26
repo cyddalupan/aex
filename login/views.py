@@ -2,9 +2,9 @@ import random
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib import messages
-
-from shared_functions import SendEmail
+from django.http import HttpResponse
+from datetime import datetime, timedelta
+from shared_functions import SendEmail, errorMessage, generate_random_string
 from .models import EmailUser
 
 from .forms import EmailLoginForm, LoginCodeVerificationForm
@@ -15,13 +15,13 @@ def login(request):
     form = EmailLoginForm(request.POST)
     if form.is_valid():
       print("Form data: %s", form.cleaned_data)
-      print("Email data: %s", form.email)
+      print("Email data: %s", form.cleaned_data['email'])
       vcode = ''.join(random.choices('0123456789', k=6))
-      if EmailUser.objects.filter(email=form.email).exists():
-        user = EmailUser.objects.get(email=form.email)
+      if EmailUser.objects.filter(email=form.cleaned_data['email']).exists():
+        user = EmailUser.objects.get(email=form.cleaned_data['email'])
         user.verify_code = vcode
       else:
-        user = EmailUser(email=form.email, verify_code=vcode)
+        user = EmailUser(email=form.cleaned_data['email'], verify_code=vcode)
       user.save()
       url = reverse('send-verification-code', args=[user.id])
       request.session['allow_send_email'] = True
@@ -54,26 +54,33 @@ def sendVerificationCode(request, user_id):
       The AutoExam Team
       '''
       SendEmail(to, subject, body)
-      return redirect('verify-login')
+      url = reverse('verify-login', args=[user_id])
+      return redirect(url)
     except EmailUser.DoesNotExist:
-      messages.error(request, "User does not exist.")
-      return redirect('content/error-message/')
+      return errorMessage(request, "User does not exist.")
   else:
     return redirect(reverse(''))
 
-def verifyLogin(request):
+def verifyLogin(request, user_id):
+  user = EmailUser.objects.get(pk=user_id)
   if request.method == 'POST':
-    ## TODO: compare code if true
-      ## TODO: Check if keep me logged is check then store cookie if active
-        ## TODO: Redirect and save long term cookie
-      ## TODO: not stay logged
-        ## TODO: Redirect save and Cookie with expiration
-    ## TODO: failed return error
-  
-  ## TODO: enter verify page
-  ## TODO: Keep me logged in
-  ## TODO: confirm 
-  form = LoginCodeVerificationForm()
+    form = LoginCodeVerificationForm(request.POST)
+    if form.cleaned_data['verification_code'] == user.verify_code:
+      response = HttpResponse("Cookie set")
+      login_token = generate_random_string(99)
+      user.login_token = login_token
+      user.save()
+      response.set_cookie('user_id', user_id)
+      if form.cleaned_data['keep_logged_in']:
+        response.set_cookie('login_token', login_token)
+      else:
+        expiration_time = datetime.now() + timedelta(hours=4)
+        response.set_cookie('login_token', login_token, expires=expiration_time)
+      return redirect(reverse('dashboard/'))
+    else:
+      form.add_error("verification_code", "Invalid verification code. Please try again.")
+  else:
+    form = LoginCodeVerificationForm()
   return render(request, 'login/login.html', {'form': form})
 
 ## TODO: Logout

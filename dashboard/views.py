@@ -3,6 +3,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from shared_functions import checkLogin
+
 load_dotenv()
 
 client = OpenAI()
@@ -27,5 +29,6 @@ response = client.audio.speech.create(
 
 # Create your views here.
 def dashboard(request):
-  response.stream_to_file(speech_file_path)
+  checkLogin(request)
+  #response.stream_to_file(speech_file_path)
   return render(request, 'dashboard/dashboard.html')
