@@ -1,5 +1,17 @@
-h1 {
-  font-size: 30px;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa; /* Light gray background */
+  color: #343a40; /* Dark gray text */
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.content {
+  text-align: center;
 }
 
 .robot-box {

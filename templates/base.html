@@ -4,30 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Your Website Title{% endblock %}</title>
+    <title>AutoExam</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <!-- Include any additional CSS or JS libraries here -->
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                <!-- Add more navigation links as needed -->
-            </ul>
-        </nav>
-    </header>
 
-    <main>
-        {% block content %}
-        <!-- Content of each page will be inserted here -->
-        {% endblock %}
-    </main>
 
-    <footer>
-        <p>&copy; {% now "Y" %} Your Website Name. All Rights Reserved.</p>
-    </footer>
+    <div class="container">
+        <div class="content">
+            {% block content %}
+            <!-- Content of each page will be inserted here -->
+            {% endblock %}
+            <br/><br/>
+            <footer>
+                <p>&copy; {% now "Y" %} Your Website Name. All Rights Reserved. | 
+                    <small>
+                        <a href="#">
+                            Logout
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </small>
+                </p>
+            </footer>
+        </div>
+    </div>
 
     <!-- Include any additional scripts here -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
