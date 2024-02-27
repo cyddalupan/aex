@@ -1,5 +1,10 @@
 .env
-**/__pycache__/**
+
+# Ignore Python bytecode files
+*.pyc
+
+# Ignore __pycache__ directories
+**/__pycache__/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -51,3 +56,9 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# Ignore staticfiles
+staticfiles/
+
+# Ignore node_modules directory
+node_modules/
