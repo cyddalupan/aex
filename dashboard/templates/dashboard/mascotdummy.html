@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <title>Audio Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    audio {
+      width: 300px;
+      margin-top: 20px;
+    }
+
+    #frame {
+      width: 400px;
+      height: 400px;
+      background-size: 400px 400px;
+      background-repeat: no-repeat;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="robot-box">
+    <div id="frame"></div>
+  </div>
+  <h1>Audio Player</h1>
+  <audio id="myAudio" controls>
+    <source src="{% static 'audio/speech.mp3' %}" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="hide-img">
+    <img src="{% static 'img/mascot/1.png' %}" />
+    <img src="{% static 'img/mascot/2.png' %}" />
+    <img src="{% static 'img/mascot/3.png' %}" />
+    <img src="{% static 'img/mascot/4.png' %}" />
+    <img src="{% static 'img/mascot/5.png' %}" />
+    <img src="{% static 'img/mascot/6.png' %}" />
+    <img src="{% static 'img/mascot/7.png' %}" />
+    <img src="{% static 'img/mascot/8.png' %}" />
+    <img src="{% static 'img/mascot/9.png' %}" />
+    <img src="{% static 'img/mascot/10.png' %}" />
+    <img src="{% static 'img/mascot/11.png' %}" />
+    <img src="{% static 'img/mascot/12.png' %}" />
+    <img src="{% static 'img/mascot/13.png' %}" />
+    <img src="{% static 'img/mascot/14.png' %}" />
+    <img src="{% static 'img/mascot/15.png' %}" />
+    <img src="{% static 'img/mascot/16.png' %}" />
+    <img src="{% static 'img/mascot/17.png' %}" />
+    <img src="{% static 'img/mascot/18.png' %}" />
+    <img src="{% static 'img/mascot/19.png' %}" />
+    <img src="{% static 'img/mascot/20.png' %}" />
+    <img src="{% static 'img/mascot/21.png' %}" />
+    <img src="{% static 'img/mascot/22.png' %}" />
+    <img src="{% static 'img/mascot/23.png' %}" />
+    <img src="{% static 'img/mascot/24.png' %}" />
+    <img src="{% static 'img/mascot/25.png' %}" />
+    <img src="{% static 'img/mascot/26.png' %}" />
+    <img src="{% static 'img/mascot/27.png' %}" />
+    <img src="{% static 'img/mascot/28.png' %}" />
+    <img src="{% static 'img/mascot/29.png' %}" />
+    <img src="{% static 'img/mascot/30.png' %}" />
+  </div>
+
+  <script>
+    // Sprite Manager.
+    const frame = document.getElementById('frame');
+    const totalFrames = 30; // Total number of frames
+    let currentFrame = 1; // Start from frame 1
+
+    function loadFrame() {
+        if (currentFrame > totalFrames) {
+            currentFrame = 1; // Reset to the first frame
+        }
+        console.log("currentFrame",currentFrame);
+        const framePath = "{% static 'img/mascot/' %}"+currentFrame+".png"; // Adjust the path
+        frame.style.backgroundImage = `url('${framePath}')`;
+        currentFrame++;
+    }
+
+    // Load Initial Image.
+    frame.style.backgroundImage = `url('{% static 'img/mascot/1.png' %}')`;
+
+    // Stop Play on Player.
+    document.addEventListener('DOMContentLoaded', function () {
+      var audio = document.getElementById('myAudio');
+      let intervalId;
+
+      // Event listener for when the audio starts playing
+      audio.addEventListener('play', function () {
+        console.log('Audio started playing');
+        intervalId = setInterval(loadFrame, 100);
+      });
+
+      // Event listener for when the audio stops playing
+      audio.addEventListener('pause', function () {
+        console.log('Audio stopped playing');
+        clearInterval(intervalId);
+        frame.style.backgroundImage = `url('{% static 'img/mascot/1.png' %}')`;
+      });
+    });
+  </script>
+</body>
+</html>

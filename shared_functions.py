@@ -1,10 +1,11 @@
 import smtplib
 import string
 import secrets
+from django.urls import reverse
+from django.shortcuts import redirect
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from django.shortcuts import redirect
 from login.models import EmailUser
 from django.contrib import messages
 
@@ -39,25 +40,17 @@ def generate_random_string(length=10):
     characters = string.ascii_letters + string.digits
     return ''.join(secrets.choice(characters) for _ in range(length))
 
-def errorMessage(request, Message):
-  messages.error(request, Message)
-  return redirect('content/error-message/')
-
 def checkLogin(request):
-  # Get user_id From Cookies
-  if 'user_id' not in request.COOKIES:
-    return errorMessage(request, "user_id does not exist.")
   user_id = request.COOKIES.get('user_id')
-  
-  # Get login_token From Cookies
-  if 'login_token' not in request.COOKIES:
-    return errorMessage(request, "login_token does not exist.")
   login_token = request.COOKIES.get('login_token')
 
-  # Check if token match
   try:
     user = EmailUser.objects.get(pk=user_id)
     if user.login_token != login_token:
-      return redirect("")
+      messages.error(request, "Login expired please login again.")
+      return False
+    else:
+      return True
   except EmailUser.DoesNotExist:
-    return errorMessage(request, "User does not exist.")
+    messages.error(request, "Login expired please login again.")
+    return False

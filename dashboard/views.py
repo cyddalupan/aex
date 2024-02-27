@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from pathlib import Path
+from django.urls import reverse
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -16,7 +17,7 @@ response = client.audio.speech.create(
   input="Teaching a four-year-old autistic child to speak requires patience, consistency, and a tailored approach to their unique needs. Here's a step-by-step checklist that you can use daily for the next three months. Keep in mind that progress may vary, and it's essential to adapt these steps based on the child's individual progress and preferences."
 )
 
-
+# OPENAI Test
 # completion = client.chat.completions.create(
 #   model="gpt-3.5-turbo",
 #   messages=[
@@ -24,11 +25,11 @@ response = client.audio.speech.create(
 #     {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
 #   ]
 # )
-
 # print(completion.choices[0].message)
 
 # Create your views here.
 def dashboard(request):
-  checkLogin(request)
+  if not checkLogin(request):
+      return redirect(reverse('error-message'))
   #response.stream_to_file(speech_file_path)
   return render(request, 'dashboard/dashboard.html')
