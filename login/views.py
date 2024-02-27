@@ -86,8 +86,11 @@ def verifyLogin(request, user_id):
     form = LoginCodeVerificationForm()
   return render(request, 'login/login.html', {'form': form})
 
-## TODO: Logout
-  ## TODO: DELETE COOKIE
+def logout(request):
+  response = HttpResponseRedirect('/')
+  response.delete_cookie('user_id')
+  response.delete_cookie('login_token')
+  return response
 
 @csrf_exempt
 def googleLogin(request):
