@@ -20,12 +20,20 @@
             <br/><br/>
             <footer>
                 <p>&copy; {% now "Y" %} AutoExam. All Rights Reserved. | 
+                    {% if no_user %}
+                    <small>
+                        <a href="{% url 'login' %}">
+                            Login
+                        <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                    {% else %}
                     <small>
                         <a href="{% url 'logout' %}">
                             Logout
                             <i class="fas fa-sign-out-alt"></i>
                         </a>
                     </small>
+                    {% endif %}
                 </p>
             </footer>
         </div>
