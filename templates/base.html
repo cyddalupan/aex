@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoExam</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -14,6 +16,15 @@
 
     <div class="container">
         <div class="content">
+            {% if hide_footer %}
+            <a class="logo" href="#">
+                <img src="{% static 'img/logo.png' %}" />
+            </a>
+            {% else %}
+            <a class="logo" href="{% url 'dashboard' %}">
+                <img src="{% static 'img/logo.png' %}" />
+            </a>
+            {% endif %}
             {% block content %}
             <!-- Content of each page will be inserted here -->
             {% endblock %}

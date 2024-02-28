@@ -10,8 +10,14 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .content {
   text-align: center;
+}
+
+.logo img {
+  width: 60%;
+  margin-bottom: 5%;
 }
 
 .robot-box {
@@ -28,4 +34,10 @@ body {
 .hide-img {
   height: 0px;
   overflow: hidden;
+}
+
+.captcha {
+  width: 70%;
+  margin: 5%;
+  border-radius: 5px;
 }

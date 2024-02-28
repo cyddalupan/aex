@@ -4,7 +4,7 @@ from django.urls import reverse
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from shared_functions import checkLogin
+from shared.shared_functions import checkLogin
 
 load_dotenv()
 

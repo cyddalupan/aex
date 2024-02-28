@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'captcha',
+    'crispy_forms',
     'dashboard.apps.DashboardConfig',
     'login.apps.LoginConfig',
     'content.apps.ContentConfig',
@@ -141,3 +142,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Other Config
+CRISPY_TEMPLATE_PACK = 'bootstrap5' 

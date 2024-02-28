@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 from django.contrib import messages
-from shared_functions import SendEmail, checkLogin, generate_random_string
+from shared.shared_functions import SendEmail, checkLogin, generate_random_string
 from .models import EmailUser
 
 from .forms import EmailLoginForm, LoginCodeVerificationForm
@@ -29,7 +29,11 @@ def login(request):
     if checkLogin(request):
       return redirect(reverse('dashboard'))
     form = EmailLoginForm()
-  return render(request, 'login/login.html', {'form': form})
+  hide_footer = True
+  return render(request, 'login/login.html', {
+    'form': form,
+    'hide_footer': hide_footer,
+  })
 
 def sendVerificationCode(request, user_id):
   if request.session.get('allow_send_email', False):
@@ -83,7 +87,11 @@ def verifyLogin(request, user_id):
         form.add_error("verification_code", "Invalid verification code. Please try again.")
   else:
     form = LoginCodeVerificationForm()
-  return render(request, 'login/login.html', {'form': form})
+  hide_footer = True
+  return render(request, 'login/login.html', {
+    'form': form,
+    'hide_footer': hide_footer,
+  })
 
 def logout(request):
   response = HttpResponseRedirect('/')
