@@ -18,6 +18,7 @@
             <!-- Content of each page will be inserted here -->
             {% endblock %}
             <br/><br/>
+            {% if not hide_footer %}
             <footer>
                 <p>&copy; {% now "Y" %} AutoExam. All Rights Reserved. | 
                     {% if no_user %}
@@ -36,6 +37,7 @@
                     {% endif %}
                 </p>
             </footer>
+            {% endif %}
         </div>
     </div>
 

@@ -52,8 +52,7 @@ def sendVerificationCode(request, user_id):
       Best regards,
       The AutoExam Team
       '''
-      # TODO: Fix send email
-      # SendEmail(to, subject, body)
+      SendEmail(to, subject, body)
       url = reverse('verify-login', args=[user_id])
       return redirect(url)
     except EmailUser.DoesNotExist:
