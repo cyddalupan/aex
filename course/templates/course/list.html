@@ -18,19 +18,15 @@
     </p>
 
     <div class="course-list">
+        {% for course in courses %}
         <div class="course-item">
-            <span>Course Name 1</span>
+            <span>{{ course.name }}</span>
             <div>
                 <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
             </div>
         </div>
-        <div class="course-item">
-            <span>Course Name 2</span>
-            <div>
-                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    <a href="#" class="add-course-link btn btn-primary">Add New Course</a>
+    <a href="{% url 'course-add' %}" class="add-course-link btn btn-primary">Add New Course</a>
 </div>
 {% endblock %}
