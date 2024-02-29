@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="course">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'course-list' %}">Course</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Exam</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>{{ course.name }}</h4>
+        <div>
+            <a href="#">
+                <i class="fas fa-edit"></i>
+                Edit
+            </a>
+        </div>
+      </div>
+</div>
+{% endblock %}

@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('dashboard.urls')),
     path('content/', include('content.urls')),
     path('course/', include('course.urls')),
+    path('exam/', include('exam.urls')),
 
     # Special URLS
     path('captcha/', include('captcha.urls')),
