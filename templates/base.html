@@ -12,19 +12,19 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-
-
-    <div class="container">
+    <div class="container" style="max-width: 800px;">
         <div class="content">
-            {% if hide_footer %}
-            <a class="logo" href="#">
-                <img src="{% static 'img/logo.png' %}" />
-            </a>
-            {% else %}
-            <a class="logo" href="{% url 'dashboard' %}">
-                <img src="{% static 'img/logo.png' %}" />
-            </a>
-            {% endif %}
+            <header>
+                {% if hide_footer %}
+                <a class="logo" href="#">
+                    <img src="{% static 'img/logo.png' %}" />
+                </a>
+                {% else %}
+                <a class="logo" href="{% url 'dashboard' %}">
+                    <img src="{% static 'img/logo.png' %}" />
+                </a>
+                {% endif %}
+            </header>
             {% block content %}
             <!-- Content of each page will be inserted here -->
             {% endblock %}

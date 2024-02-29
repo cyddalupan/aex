@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('login.urls')),
     path('', include('dashboard.urls')),
     path('content/', include('content.urls')),
+    path('course/', include('course.urls')),
 
     # Special URLS
     path('captcha/', include('captcha.urls')),
