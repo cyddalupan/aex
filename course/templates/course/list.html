@@ -1,11 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div id="course">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Course</li>
         </ol>
     </nav>
-    Course Page
+
+    <p>
+        <small>
+            Prioritize course organization on this page before creating lessons/exams.
+            Courses act as central hubs, making content management easier.
+            Enhance user engagement as you deliver and promote your content on your app.
+        </small>
+    </p>
+
+    <div class="course-list">
+        <div class="course-item">
+            <span>Course Name 1</span>
+            <div>
+                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+            </div>
+        </div>
+        <div class="course-item">
+            <span>Course Name 2</span>
+            <div>
+                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="add-course-link btn btn-primary">Add New Course</a>
+</div>
 {% endblock %}
