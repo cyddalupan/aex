@@ -1,4 +1,4 @@
-from datetime import timezone
+from datetime import datetime, timezone
 from django.db import models
 
 from login.models import EmailUser
@@ -11,7 +11,7 @@ class Course(models.Model):
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
-        self.deleted_at = timezone.now()
+        self.deleted_at = datetime.now(timezone.utc)
         self.save()
 
     def __str__(self):

@@ -3,6 +3,7 @@ from django.urls import reverse
 from .forms import CourseForm
 from course.models import Course
 from login.models import EmailUser
+from django.contrib import messages
 
 from shared.shared_functions import checkLogin
 
@@ -12,7 +13,7 @@ def list(request):
       return redirect(reverse('error-message'))
   user_id = request.COOKIES.get('user_id')
   user = EmailUser.objects.get(pk=user_id)
-  courses = Course.objects.filter(user=user)
+  courses = Course.objects.filter(user=user, deleted_at__isnull=True)
   return render(request, 'course/list.html', {'courses': courses})
 
 def add(request):
@@ -36,18 +37,30 @@ def add(request):
 def edit(request, course_id):
   if not checkLogin(request):
       return redirect(reverse('error-message'))
-  instance = get_object_or_404(Course, pk=course_id)
+  course = get_object_or_404(Course, pk=course_id)
   if request.method == 'POST':
     form = CourseForm(request.POST)
     if form.is_valid():
-      instance.name = form.cleaned_data['name']
-      instance.description = form.cleaned_data['description']
-      instance.save()
+      course.name = form.cleaned_data['name']
+      course.description = form.cleaned_data['description']
+      course.save()
       return redirect(reverse('course-list'))
   else:
     # Initialize the form with the instance data
     form = CourseForm(initial={
-      'name': instance.name,
-      'description': instance.description,
+      'name': course.name,
+      'description': course.description,
     })
   return render(request, 'course/add.html', {'form': form})
+
+def delete(request, course_id):
+  if not checkLogin(request):
+      return redirect(reverse('error-message'))
+  course = get_object_or_404(Course, pk=course_id)
+  user_id = request.COOKIES.get('user_id')
+  user = EmailUser.objects.get(pk=user_id)
+  if user != course.user:
+    messages.error(request, "Login expired please login again.")
+    return redirect(reverse('error-message'))
+  course.delete()
+  return redirect(reverse('course-list'))
