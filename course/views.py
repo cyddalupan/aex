@@ -33,7 +33,7 @@ def add(request):
       return redirect(reverse('course-list'))
   else:
     form = CourseForm()
-  return render(request, 'course/add.html', {'form': form})
+  return render(request, 'course/form.html', {'form': form})
 def edit(request, course_id):
   if not checkLogin(request):
       return redirect(reverse('error-message'))
@@ -51,7 +51,7 @@ def edit(request, course_id):
       'name': course.name,
       'description': course.description,
     })
-  return render(request, 'course/add.html', {'form': form})
+  return render(request, 'course/form.html', {'form': form})
 
 def delete(request, course_id):
   if not checkLogin(request):
