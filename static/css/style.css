@@ -79,3 +79,22 @@ body {
   text-align: center;
   margin-top: 2rem;
 }
+
+#exam .course-list {
+  max-width: 600px;
+  margin: auto;
+}
+#exam .course-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+#exam .add-exam-link {
+  display: block;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  margin-top: 2rem;
+}

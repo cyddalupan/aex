@@ -1,9 +1,11 @@
 from datetime import datetime, timezone
 from django.db import models
 
+from course.models import Course
+
 # Create your models here.
 class Exam(models.Model):
-    course_id = models.IntegerField(unique=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
     title = models.CharField(max_length=255)
     audio_url = models.URLField(blank=True, null=True)
     video_url = models.URLField(blank=True, null=True)
