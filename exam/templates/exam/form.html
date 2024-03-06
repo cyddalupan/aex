@@ -19,11 +19,44 @@
     {% endif %}
     <form method="post" action="">
         {% csrf_token %}
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name"><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email"><br>
-        <input type="submit" class="btn btn-primary">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control">
+        </div>
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="switchToggle">
+            <label class="form-check-label">
+                Embed youtube video
+            </label>
+        </div>
+        <div id="lesson" class="form-floating">
+            <textarea class="form-control" style="height: 100px" placeholder="Example: The shortest war in history lasted only 38 minutes. It was between Britain and Zanzibar on August 27, 1896."></textarea>
+            <label>Lesson</label>
+        </div>
+        <div id="youtube" style="display: none;" class="form-floating">
+            <textarea class="form-control" style="height: 100px" placeholder="Paste youtube video"></textarea>
+            <label>Youtube Video</label>
+        </div><br/>
+        <div class="form-floating">
+            <textarea class="form-control" style="height: 100px" placeholder="Example: Britain and Zanzibar war only lasted 38 minutes"></textarea>
+            <label>Answer</label>
+        </div>
     </form>
 </div>
+
+
+<script>
+    $(document).ready(function(){
+      $('#switchToggle').change(function(){
+        if($(this).is(':checked')) {
+          $('#lesson').hide();
+          $('#youtube').show();
+        } else {
+          $('#lesson').show();
+          $('#youtube').hide();
+        }
+      });
+    });
+  </script>
 {% endblock %}
