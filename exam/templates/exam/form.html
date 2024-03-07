@@ -11,52 +11,75 @@
     </nav>
 
     {% if error_messages %}
-        {% for message in error_messages %}
-        <div class="alert alert-warning" role="alert">
-            {{ message }}
-        </div>
-        {% endfor %}
+    {% for message in error_messages %}
+    <div class="alert alert-warning" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
+
+    <small class="text-start">
+        <p>
+            You have two options:
+        </p>
+        <ol>
+            <li>
+                Type out the lesson content, and we'll convert it into an audio-based lesson.
+            </li>
+            <li>
+                Embed a YouTube video as the lesson material.
+            </li>
+        </ol>
+        <p>
+            After presenting the lesson, you'll provide your expected answer to the questions. When the student engages
+            with the lesson, either by watching or listening, they'll explain their understanding. Our AI-powered
+            algorithm will then assess how closely their explanation matches your expected answer. This approach ensures
+            that students truly grasp the lesson before progressing to the next topic.
+        </p>
+    </small>
     <form method="post" action="">
         {% csrf_token %}
-        <div class="mb-3">
-            <label class="form-label">Title</label>
-            <input type="text" class="form-control">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Title</span>
+            <input type="text" class="form-control" placeholder="Example: Introduction" aria-label="Title">
         </div>
 
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" role="switch" id="switchToggle">
-            <label class="form-check-label">
-                Embed youtube video
+            <label class="form-check-label lesson">
+                Toggle the switch if you prefer to use a YouTube video instead.
+            </label>
+            <label style="display: none;" class="form-check-label youtube">
+                Toggle back if you prefer to simply type your lesson.
             </label>
         </div>
-        <div id="lesson" class="form-floating">
-            <textarea class="form-control" style="height: 100px" placeholder="Example: The shortest war in history lasted only 38 minutes. It was between Britain and Zanzibar on August 27, 1896."></textarea>
-            <label>Lesson</label>
+        <div class="form-floating lesson">
+            <textarea class="form-control" style="height: 100px"></textarea>
+            <label><i class="fas fa-volume-up"></i> Lesson</label>
         </div>
-        <div id="youtube" style="display: none;" class="form-floating">
+        <div style="display: none;" class="form-floating youtube">
             <textarea class="form-control" style="height: 100px" placeholder="Paste youtube video"></textarea>
-            <label>Youtube Video</label>
-        </div><br/>
+            <label><i class="fab fa-youtube"></i> Youtube Video</label>
+        </div><br />
         <div class="form-floating">
-            <textarea class="form-control" style="height: 100px" placeholder="Example: Britain and Zanzibar war only lasted 38 minutes"></textarea>
-            <label>Answer</label>
+            <textarea class="form-control" style="height: 100px"></textarea>
+            <label>Your Expected Answer</label>
         </div>
     </form>
 </div>
 
 
 <script>
-    $(document).ready(function(){
-      $('#switchToggle').change(function(){
-        if($(this).is(':checked')) {
-          $('#lesson').hide();
-          $('#youtube').show();
-        } else {
-          $('#lesson').show();
-          $('#youtube').hide();
-        }
-      });
+    $(document).ready(function () {
+        $('#switchToggle').change(function () {
+            if ($(this).is(':checked')) {
+                $('.lesson').hide();
+                $('.youtube').show();
+            } else {
+                $('.lesson').show();
+                $('.youtube').hide();
+            }
+        });
     });
-  </script>
+</script>
 {% endblock %}
