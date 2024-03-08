@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
 <div id="course">
     <nav aria-label="breadcrumb">
@@ -41,11 +43,10 @@
         {% csrf_token %}
         <div class="input-group mb-3">
             <span class="input-group-text">Title</span>
-            <input type="text" class="form-control" placeholder="Example: Introduction" aria-label="Title">
+            <input type="text" name="title" class="form-control" placeholder="Example: Introduction" aria-label="Title" value="{{ exam.title }}">
         </div>
-
         <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="switchToggle">
+            <input class="form-check-input" type="checkbox" name="is_video" role="switch" id="switchToggle" {% if exam.is_video %}checked{% endif %}>
             <label class="form-check-label lesson">
                 Toggle the switch if you prefer to use a YouTube video instead.
             </label>
@@ -53,21 +54,54 @@
                 Toggle back if you prefer to simply type your lesson.
             </label>
         </div>
-        <div class="form-floating lesson">
-            <textarea class="form-control" style="height: 100px"></textarea>
+        <div {% if exam.is_video %}style="display: none;"{% endif %} class="form-floating lesson">
+            <textarea name="lesson" class="form-control" style="height: 100px">{{ exam.lesson }}</textarea>
             <label><i class="fas fa-volume-up"></i> Lesson</label>
         </div>
-        <div style="display: none;" class="form-floating youtube">
-            <textarea class="form-control" style="height: 100px" placeholder="Paste youtube video"></textarea>
+        <div  {% if not exam.is_video %}style="display: none;"{% endif %} class="form-floating youtube">
+            <textarea name="youtube" class="form-control" style="height: 100px" placeholder="Paste youtube video">{{ exam.youtube }}</textarea>
             <label><i class="fab fa-youtube"></i> Youtube Video</label>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fas fa-info-circle"></i> How to embed a Youtube Video.
+            </a>
         </div><br />
         <div class="form-floating">
-            <textarea class="form-control" style="height: 100px"></textarea>
+            <textarea name="answer" class="form-control" style="height: 100px">{{ exam.answer }}</textarea>
             <label>Your Expected Answer</label>
         </div>
+        <br/>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Embed a Youtube Video</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>
+                While watching the YouTube video, locate and click on the "Share" button beneath the video player.
+            </p>
+            <img src="{% static 'img/exam/yt-share.png' %}" class="card-img-top img-fluid" alt="youtube share button">
+            <p>
+                Next, select the "Embed" option from the menu that appears.
+            </p>
+            <img src="{% static 'img/exam/yt-embed.png' %}" class="card-img-top img-fluid" alt="youtube embed button">
+            <p>
+                Now, copy the iFrame code provided in the dialog box.
+            </p>
+            <img src="{% static 'img/exam/ty-copy-embed.png' %}" class="card-img-top img-fluid" alt="youtube copy the iframe">
+            <p>
+                Finally, navigate to the desired text area on your webpage or document and paste the copied iFrame code.
+            </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
     $(document).ready(function () {

@@ -34,6 +34,7 @@ def add(request):
   else:
     form = CourseForm()
   return render(request, 'course/form.html', {'form': form})
+
 def edit(request, course_id):
   if not checkLogin(request):
       return redirect(reverse('error-message'))
