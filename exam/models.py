@@ -7,7 +7,7 @@ from course.models import Course
 class Exam(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
     title = models.CharField(max_length=255)
-    audio_url = models.URLField(blank=True, null=True)
+    audio_url = models.CharField(blank=True, null=True, max_length=250)
     video_embed = models.CharField(blank=True, null=True, max_length=800)
     answer = models.CharField(max_length=255)
     is_video = models.BooleanField(default=False)

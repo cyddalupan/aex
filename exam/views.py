@@ -1,10 +1,17 @@
+import uuid
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.db.models import Count
 from course.models import Course
+from dotenv import load_dotenv
+from openai import OpenAI
+from pathlib import Path
 from .models import Exam
 
 from shared.shared_functions import checkLogin
+
+load_dotenv()
+client = OpenAI()
 
 # Create your views here.
 def list(request, course_id):
@@ -25,6 +32,7 @@ def add(request, course_id):
         "youtube" : "",
         "answer" : ""
     }
+
     if request.method == 'POST':  
         exam["title"] = request.POST.get('title', '')
         exam["is_video"] = request.POST.get('is_video', '')
@@ -59,10 +67,20 @@ def add(request, course_id):
         if len(error_messages) == 0:
             course = Course.objects.get(pk=course_id)
             order = Exam.objects.filter(course=course).aggregate(count=Count('id'))['count'] or 0
+            if not exam["is_video"]:
+                audio_url = "static/audio/" + str(uuid.uuid4()) + ".mp3"
+                speech_file_path = Path(__file__).parent.parent / audio_url
+                response = client.audio.speech.create(
+                    model="tts-1",
+                    voice="shimmer",
+                    input=exam["lesson"]
+                )
+                response.stream_to_file(speech_file_path)
+
             examModel = Exam(
                 course = course,
                 title = exam["title"],
-                audio_url = "",
+                audio_url = audio_url,
                 video_embed = exam["youtube"],
                 answer = exam["answer"],
                 is_video = exam["is_video"],
@@ -71,6 +89,7 @@ def add(request, course_id):
             examModel.save()
             url = reverse('exam-list', args=[course_id])
             return redirect(url)
+
     return render(request, 'exam/form.html', {
         'exam': exam,
         'error_messages': error_messages,
