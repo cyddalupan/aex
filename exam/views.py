@@ -18,7 +18,11 @@ def list(request, course_id):
     if not checkLogin(request):
         return redirect(reverse('error-message'))
     course = Course.objects.get(pk=course_id)
-    return render(request, 'exam/list.html', {'course': course})
+    exams = Exam.objects.filter(course=course, deleted_at__isnull=True)
+    return render(request, 'exam/list.html', {
+        'course': course,
+        'exams': exams
+    })
 
 def add(request, course_id):
     if not checkLogin(request):

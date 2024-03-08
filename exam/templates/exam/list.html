@@ -20,12 +20,24 @@
         </div>
     </div>
 
-
     <p>
         <small>
             [add description later]
         </small>
     </p>
+    
+    <div class="list">
+        {% for exam in exams %}
+        <a href="#">
+            <div class="item">
+                <span>{{ exam.title }}</span>
+                <div>
+                    <a id="deleteLink" href="#" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this exam?');"><i class="fas fa-trash"></i></a>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
 
     <a href="{% url 'exam-add' course.id %}" class="add-exam-link btn btn-primary">Add New Exam</a>
 </div>

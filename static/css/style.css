@@ -80,11 +80,11 @@ body {
   margin-top: 2rem;
 }
 
-#exam .course-list {
+#exam .list {
   max-width: 600px;
   margin: auto;
 }
-#exam .course-item {
+#exam .item {
   display: flex;
   align-items: center;
   justify-content: space-between;
