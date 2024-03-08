@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.db.models import Count
 from course.models import Course
 from .models import Exam
 
@@ -57,6 +58,7 @@ def add(request, course_id):
             error_messages.append('Answer exceeds maximum length of 800 characters.')
         if len(error_messages) == 0:
             course = Course.objects.get(pk=course_id)
+            order = Exam.objects.filter(course=course).aggregate(count=Count('id'))['count'] or 0
             examModel = Exam(
                 course = course,
                 title = exam["title"],
@@ -64,7 +66,7 @@ def add(request, course_id):
                 video_embed = exam["youtube"],
                 answer = exam["answer"],
                 is_video = exam["is_video"],
-                order = 0,
+                order = order,
             )
             examModel.save()
             url = reverse('exam-list', args=[course_id])
