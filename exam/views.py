@@ -98,3 +98,23 @@ def add(request, course_id):
         'exam': exam,
         'error_messages': error_messages,
     })
+
+def edit(request, exam_id):
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    error_messages = []
+
+    exam = Exam.objects.get(pk=exam_id)
+
+    exam = {
+        "title" : exam.title,
+        "is_video" : exam.is_video,
+        "lesson" : exam.audio_url,
+        "youtube" : exam.video_embed,
+        "answer" : exam.answer
+    }
+
+    return render(request, 'exam/form.html', {
+        'exam': exam,
+        'error_messages': error_messages,
+    })

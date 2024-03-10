@@ -28,7 +28,7 @@
     
     <div class="list">
         {% for exam in exams %}
-        <a href="#">
+        <a href="{% url 'exam-edit' exam.id %}">
             <div class="item">
                 <span>{{ exam.title }}</span>
                 <div>
