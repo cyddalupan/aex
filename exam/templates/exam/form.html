@@ -8,7 +8,12 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'course-list' %}">Course</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="{% url 'exam-list' course_id %}">Exam</a></li>
+            {% if is_edit %}
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            {% else %}
             <li class="breadcrumb-item active" aria-current="page">Add</li>
+            {% endif %}
         </ol>
     </nav>
 

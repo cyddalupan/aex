@@ -36,23 +36,27 @@ def add(request):
   return render(request, 'course/form.html', {'form': form})
 
 def edit(request, course_id):
-  if not checkLogin(request):
-      return redirect(reverse('error-message'))
-  course = get_object_or_404(Course, pk=course_id)
-  if request.method == 'POST':
-      form = CourseForm(request.POST)
-      if form.is_valid():
-          course.name = form.cleaned_data['name']
-          course.description = form.cleaned_data['description']
-          course.save()
-          return redirect(reverse('course-list'))
-  else:
-      # Initialize the form with the instance data
-      form = CourseForm(initial={
-          'name': course.name,
-          'description': course.description,
-      })
-  return render(request, 'course/form.html', {'form': form})
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            course.name = form.cleaned_data['name']
+            course.description = form.cleaned_data['description']
+            course.save()
+            return redirect(reverse('course-list'))
+    else:
+        # Initialize the form with the instance data
+        form = CourseForm(initial={
+            'name': course.name,
+            'description': course.description,
+        })
+
+    return render(request, 'course/form.html', {
+       'form': form,
+       'is_edit': True
+    })
 
 def delete(request, course_id):
   if not checkLogin(request):

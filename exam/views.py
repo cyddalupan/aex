@@ -95,6 +95,7 @@ def add(request, course_id):
             return redirect(url)
 
     return render(request, 'exam/form.html', {
+        'course_id': course_id,
         'exam': exam,
         'error_messages': error_messages,
     })
@@ -105,6 +106,7 @@ def edit(request, exam_id):
     error_messages = []
 
     exam = Exam.objects.get(pk=exam_id)
+    course_id = exam.course.id
 
     exam = {
         "title" : exam.title,
@@ -115,6 +117,8 @@ def edit(request, exam_id):
     }
 
     return render(request, 'exam/form.html', {
+        'is_edit': True,
+        'course_id': course_id,
         'exam': exam,
         'error_messages': error_messages,
     })
