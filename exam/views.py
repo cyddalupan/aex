@@ -1,5 +1,5 @@
 import uuid
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.db.models import Count
 from course.models import Course
@@ -44,36 +44,13 @@ def add(request, course_id):
         exam["youtube"] = request.POST.get('youtube', '')
         exam["answer"] = request.POST.get('answer', '')
 
-        if not exam["title"]:
-            error_messages.append("Title is required.")
-        if len(exam["title"]) > 240:
-            error_messages.append('Title exceeds maximum length of 240 characters.')
-        if exam["is_video"]:
-            exam["is_video"] = True
-            if not exam["youtube"]:
-                error_messages.append("Please embed a valid youtube video")
-            if len(exam["youtube"]) > 800:
-                error_messages.append('YouTube embed code exceeds maximum length of 800 characters.')
-            if not exam["youtube"].startswith('<iframe') or not exam["youtube"].endswith('</iframe>'):
-                error_messages.append('Invalid YouTube embed code. It must start with "<iframe" and end with "</iframe>".')
-            if 'src="https://www.youtube.com/embed/' not in exam["youtube"]:
-                error_messages.append('Invalid YouTube embed code. It must contain a valid YouTube video URL.')
-        else:
-            exam["is_video"] = False
-            if not exam["lesson"]:
-                error_messages.append("Please write a lesson")
-            if len(exam["lesson"]) > 800:
-                error_messages.append('Lesson exceeds maximum length of 800 characters.')
-        if not exam["answer"]:
-            error_messages.append("Please write your expected answer")
-        if len(exam["answer"]) > 800:
-            error_messages.append('Answer exceeds maximum length of 800 characters.')
+        error_messages = validateForm(exam)
         if len(error_messages) == 0:
             course = Course.objects.get(pk=course_id)
             order = Exam.objects.filter(course=course).aggregate(count=Count('id'))['count'] or 0
             if not exam["is_video"]:
                 audio_url = "audio/" + str(uuid.uuid4()) + ".mp3"
-                speech_file_path = Path(__file__).parent.parent / audio_url
+                speech_file_path = Path(__file__).parent.parent / str("static/" +audio_url)
                 response = client.audio.speech.create(
                     model="tts-1",
                     voice="shimmer",
@@ -106,17 +83,47 @@ def edit(request, exam_id):
         return redirect(reverse('error-message'))
     error_messages = []
 
-    exam = Exam.objects.get(pk=exam_id)
-    course_id = exam.course.id
+    examModel = get_object_or_404(Exam, pk=exam_id)
+    course_id = examModel.course.id
 
     exam = {
-        "title" : exam.title,
-        "is_video" : exam.is_video,
-        "audio_url" : exam.audio_url,
-        "lesson" : exam.lesson,
-        "youtube" : exam.video_embed,
-        "answer" : exam.answer
+        "title" : examModel.title,
+        "is_video" : examModel.is_video,
+        "audio_url" : examModel.audio_url,
+        "lesson" : examModel.lesson,
+        "youtube" : examModel.video_embed,
+        "answer" : examModel.answer
     }
+
+    if request.method == 'POST':  
+        exam["title"] = request.POST.get('title', '')
+        exam["is_video"] = request.POST.get('is_video', '')
+        exam["lesson"] = request.POST.get('lesson', '')
+        exam["youtube"] = request.POST.get('youtube', '')
+        exam["answer"] = request.POST.get('answer', '')
+
+        error_messages = validateForm(exam)
+        if len(error_messages) == 0:
+            examModel.title = exam["title"]
+            examModel.answer = exam["answer"]
+            examModel.is_video = exam["is_video"]
+
+            if not exam["is_video"] and examModel.lesson != exam["lesson"]:
+                audio_url = "audio/" + str(uuid.uuid4()) + ".mp3"
+                speech_file_path = Path(__file__).parent.parent / str("static/" +audio_url)
+                response = client.audio.speech.create(
+                    model="tts-1",
+                    voice="shimmer",
+                    input=exam["lesson"]
+                )
+                response.stream_to_file(speech_file_path)
+                examModel.audio_url = audio_url
+                exam["audio_url"] = audio_url
+                
+            if exam["is_video"] and examModel.video_embed != exam["youtube"]:
+                examModel.video_embed = exam["youtube"]
+
+            examModel.save()
 
     return render(request, 'exam/form.html', {
         'is_edit': True,
@@ -124,3 +131,31 @@ def edit(request, exam_id):
         'exam': exam,
         'error_messages': error_messages,
     })
+
+def validateForm(exam):
+    error_messages = []
+    if not exam["title"]:
+        error_messages.append("Title is required.")
+    if len(exam["title"]) > 240:
+        error_messages.append('Title exceeds maximum length of 240 characters.')
+    if exam["is_video"]:
+        exam["is_video"] = True
+        if not exam["youtube"]:
+            error_messages.append("Please embed a valid youtube video")
+        if len(exam["youtube"]) > 800:
+            error_messages.append('YouTube embed code exceeds maximum length of 800 characters.')
+        if not exam["youtube"].startswith('<iframe') or not exam["youtube"].endswith('</iframe>'):
+            error_messages.append('Invalid YouTube embed code. It must start with "<iframe" and end with "</iframe>".')
+        if 'src="https://www.youtube.com/embed/' not in exam["youtube"]:
+            error_messages.append('Invalid YouTube embed code. It must contain a valid YouTube video URL.')
+    else:
+        exam["is_video"] = False
+        if not exam["lesson"]:
+            error_messages.append("Please write a lesson")
+        if len(exam["lesson"]) > 800:
+            error_messages.append('Lesson exceeds maximum length of 800 characters.')
+    if not exam["answer"]:
+        error_messages.append("Please write your expected answer")
+    if len(exam["answer"]) > 800:
+        error_messages.append('Answer exceeds maximum length of 800 characters.')
+    return error_messages

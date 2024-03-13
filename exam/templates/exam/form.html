@@ -52,6 +52,7 @@
                 value="{{ exam.title }}">
         </div>
 
+        {% if exam.audio_url and not exam.is_video %}
         <div class="robot-box">
             <div id="frame"></div>
         </div>
@@ -59,6 +60,12 @@
             <source src="{% static exam.audio_url %}" type="audio/mp3">
             Your browser does not support the audio element.
         </audio>
+        {% endif %}
+
+        
+        {% if exam.youtube and exam.is_video %}
+            {{ exam.youtube | safe }}
+        {% endif %}
 
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" name="is_video" role="switch" id="switchToggle" 

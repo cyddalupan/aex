@@ -26,14 +26,14 @@ body {
 }
 
 .robot-box {
-  width: 400px;
-  height: 400px;
+  width: 300px;
+  height: 300px;
   margin: auto;
 }
-
-.robot-box img {
-  width: 350px;
-  height: 350px;
+.robot-box #frame {
+  width: 300px;
+  background-size: 300px 300px;
+  height: 300px;
 }
 
 .hide-img {
