@@ -84,6 +84,7 @@ def add(request, course_id):
             examModel = Exam(
                 course = course,
                 title = exam["title"],
+                lesson = exam["lesson"],
                 audio_url = audio_url,
                 video_embed = exam["youtube"],
                 answer = exam["answer"],
