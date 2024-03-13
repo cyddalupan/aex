@@ -3,9 +3,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.db.models import Count
 from course.models import Course
+from django.contrib import messages
 from dotenv import load_dotenv
 from openai import OpenAI
 from pathlib import Path
+
+from login.models import EmailUser
 from .models import Exam
 
 from shared.shared_functions import checkLogin
@@ -159,3 +162,17 @@ def validateForm(exam):
     if len(exam["answer"]) > 800:
         error_messages.append('Answer exceeds maximum length of 800 characters.')
     return error_messages
+
+def delete(request, exam_id):
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    exam = get_object_or_404(Exam, pk=exam_id)
+    course = exam.course
+    user_id = request.COOKIES.get('user_id')
+    user = EmailUser.objects.get(pk=user_id)
+    if user != course.user:
+        messages.error(request, "Login expired please login again.")
+        return redirect(reverse('error-message'))
+    exam.delete()
+    url = reverse('exam-list', args=[course.id])
+    return redirect(url)

@@ -32,7 +32,7 @@
             <div class="item">
                 <span>{{ exam.title }}</span>
                 <div>
-                    <a id="deleteLink" href="#" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this exam?');"><i class="fas fa-trash"></i></a>
+                    <a id="deleteLink" href="{% url 'exam-delete' exam.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this exam?');"><i class="fas fa-trash"></i></a>
                 </div>
             </div>
         </a>

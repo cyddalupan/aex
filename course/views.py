@@ -9,12 +9,12 @@ from shared.shared_functions import checkLogin
 
 # Create your views here.
 def list(request):
-  if not checkLogin(request):
-      return redirect(reverse('error-message'))
-  user_id = request.COOKIES.get('user_id')
-  user = EmailUser.objects.get(pk=user_id)
-  courses = Course.objects.filter(user=user, deleted_at__isnull=True)
-  return render(request, 'course/list.html', {'courses': courses})
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    user_id = request.COOKIES.get('user_id')
+    user = EmailUser.objects.get(pk=user_id)
+    courses = Course.objects.filter(user=user, deleted_at__isnull=True)
+    return render(request, 'course/list.html', {'courses': courses})
 
 def add(request):
   if not checkLogin(request):
@@ -59,13 +59,13 @@ def edit(request, course_id):
     })
 
 def delete(request, course_id):
-  if not checkLogin(request):
-      return redirect(reverse('error-message'))
-  course = get_object_or_404(Course, pk=course_id)
-  user_id = request.COOKIES.get('user_id')
-  user = EmailUser.objects.get(pk=user_id)
-  if user != course.user:
-      messages.error(request, "Login expired please login again.")
-      return redirect(reverse('error-message'))
-  course.delete()
-  return redirect(reverse('course-list'))
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    course = get_object_or_404(Course, pk=course_id)
+    user_id = request.COOKIES.get('user_id')
+    user = EmailUser.objects.get(pk=user_id)
+    if user != course.user:
+        messages.error(request, "Login expired please login again.")
+        return redirect(reverse('error-message'))
+    course.delete()
+    return redirect(reverse('course-list'))
