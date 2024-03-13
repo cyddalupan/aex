@@ -48,10 +48,21 @@
         {% csrf_token %}
         <div class="input-group mb-3">
             <span class="input-group-text">Title</span>
-            <input type="text" name="title" class="form-control" placeholder="Example: Introduction" aria-label="Title" value="{{ exam.title }}">
+            <input type="text" name="title" class="form-control" placeholder="Example: Introduction" aria-label="Title"
+                value="{{ exam.title }}">
         </div>
+
+        <div class="robot-box">
+            <div id="frame"></div>
+        </div>
+        <audio id="myAudio" controls>
+            <source src="{% static exam.audio_url %}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+
         <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" name="is_video" role="switch" id="switchToggle" {% if exam.is_video %}checked{% endif %}>
+            <input class="form-check-input" type="checkbox" name="is_video" role="switch" id="switchToggle" 
+                {% if exam.is_video %}checked{% endif %}>
             <label class="form-check-label lesson">
                 Toggle the switch if you prefer to use a YouTube video instead.
             </label>
@@ -59,12 +70,13 @@
                 Toggle back if you prefer to simply type your lesson.
             </label>
         </div>
-        <div {% if exam.is_video %}style="display: none;"{% endif %} class="form-floating lesson">
+        <div {% if exam.is_video %}style="display: none;" {% endif %} class="form-floating lesson">
             <textarea name="lesson" class="form-control" style="height: 100px">{{ exam.lesson }}</textarea>
             <label><i class="fas fa-volume-up"></i> Lesson</label>
         </div>
-        <div  {% if not exam.is_video %}style="display: none;"{% endif %} class="form-floating youtube">
-            <textarea name="youtube" class="form-control" style="height: 100px" placeholder="Paste youtube video">{{ exam.youtube }}</textarea>
+        <div {% if not exam.is_video %}style="display: none;" {% endif %} class="form-floating youtube">
+            <textarea name="youtube" class="form-control" style="height: 100px"
+                placeholder="Paste youtube video">{{ exam.youtube }}</textarea>
             <label><i class="fab fa-youtube"></i> Youtube Video</label>
             <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <i class="fas fa-info-circle"></i> How to embed a Youtube Video.
@@ -74,39 +86,77 @@
             <textarea name="answer" class="form-control" style="height: 100px">{{ exam.answer }}</textarea>
             <label>Your Expected Answer</label>
         </div>
-        <br/>
+        <br />
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+</div>
+
+
+<div class="hide-img">
+    <img src="{% static 'img/mascot/1.png' %}" />
+    <img src="{% static 'img/mascot/2.png' %}" />
+    <img src="{% static 'img/mascot/3.png' %}" />
+    <img src="{% static 'img/mascot/4.png' %}" />
+    <img src="{% static 'img/mascot/5.png' %}" />
+    <img src="{% static 'img/mascot/6.png' %}" />
+    <img src="{% static 'img/mascot/7.png' %}" />
+    <img src="{% static 'img/mascot/8.png' %}" />
+    <img src="{% static 'img/mascot/9.png' %}" />
+    <img src="{% static 'img/mascot/10.png' %}" />
+    <img src="{% static 'img/mascot/11.png' %}" />
+    <img src="{% static 'img/mascot/12.png' %}" />
+    <img src="{% static 'img/mascot/13.png' %}" />
+    <img src="{% static 'img/mascot/14.png' %}" />
+    <img src="{% static 'img/mascot/15.png' %}" />
+    <img src="{% static 'img/mascot/16.png' %}" />
+    <img src="{% static 'img/mascot/17.png' %}" />
+    <img src="{% static 'img/mascot/18.png' %}" />
+    <img src="{% static 'img/mascot/19.png' %}" />
+    <img src="{% static 'img/mascot/20.png' %}" />
+    <img src="{% static 'img/mascot/21.png' %}" />
+    <img src="{% static 'img/mascot/22.png' %}" />
+    <img src="{% static 'img/mascot/23.png' %}" />
+    <img src="{% static 'img/mascot/24.png' %}" />
+    <img src="{% static 'img/mascot/25.png' %}" />
+    <img src="{% static 'img/mascot/26.png' %}" />
+    <img src="{% static 'img/mascot/27.png' %}" />
+    <img src="{% static 'img/mascot/28.png' %}" />
+    <img src="{% static 'img/mascot/29.png' %}" />
+    <img src="{% static 'img/mascot/30.png' %}" />
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Embed a Youtube Video</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Embed a Youtube Video</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    While watching the YouTube video, locate and click on the "Share" button beneath the video player.
+                </p>
+                <img src="{% static 'img/exam/yt-share.png' %}" class="card-img-top img-fluid"
+                    alt="youtube share button">
+                <p>
+                    Next, select the "Embed" option from the menu that appears.
+                </p>
+                <img src="{% static 'img/exam/yt-embed.png' %}" class="card-img-top img-fluid"
+                    alt="youtube embed button">
+                <p>
+                    Now, copy the iFrame code provided in the dialog box.
+                </p>
+                <img src="{% static 'img/exam/ty-copy-embed.png' %}" class="card-img-top img-fluid"
+                    alt="youtube copy the iframe">
+                <p>
+                    Finally, navigate to the desired text area on your webpage or document and paste the copied iFrame
+                    code.
+                </p>
+            </div>
         </div>
-        <div class="modal-body">
-            <p>
-                While watching the YouTube video, locate and click on the "Share" button beneath the video player.
-            </p>
-            <img src="{% static 'img/exam/yt-share.png' %}" class="card-img-top img-fluid" alt="youtube share button">
-            <p>
-                Next, select the "Embed" option from the menu that appears.
-            </p>
-            <img src="{% static 'img/exam/yt-embed.png' %}" class="card-img-top img-fluid" alt="youtube embed button">
-            <p>
-                Now, copy the iFrame code provided in the dialog box.
-            </p>
-            <img src="{% static 'img/exam/ty-copy-embed.png' %}" class="card-img-top img-fluid" alt="youtube copy the iframe">
-            <p>
-                Finally, navigate to the desired text area on your webpage or document and paste the copied iFrame code.
-            </p>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -118,6 +168,46 @@
                 $('.lesson').show();
                 $('.youtube').hide();
             }
+        });
+    });
+</script>
+
+
+<script>
+    // Sprite Manager.
+    const frame = document.getElementById('frame');
+    const totalFrames = 30; // Total number of frames
+    let currentFrame = 1; // Start from frame 1
+
+    function loadFrame() {
+        if (currentFrame > totalFrames) {
+            currentFrame = 1; // Reset to the first frame
+        }
+        console.log("currentFrame", currentFrame);
+        const framePath = "{% static 'img/mascot/' %}" + currentFrame + ".png"; // Adjust the path
+        frame.style.backgroundImage = `url('${framePath}')`;
+        currentFrame++;
+    }
+
+    // Load Initial Image.
+    frame.style.backgroundImage = `url('{% static 'img/mascot/1.png' %}')`;
+
+    // Stop Play on Player.
+    document.addEventListener('DOMContentLoaded', function () {
+        var audio = document.getElementById('myAudio');
+        let intervalId;
+
+        // Event listener for when the audio starts playing
+        audio.addEventListener('play', function () {
+            console.log('Audio started playing');
+            intervalId = setInterval(loadFrame, 100);
+        });
+
+        // Event listener for when the audio stops playing
+        audio.addEventListener('pause', function () {
+            console.log('Audio stopped playing');
+            clearInterval(intervalId);
+            frame.style.backgroundImage = `url('{% static 'img/mascot/1.png' %}')`;
         });
     });
 </script>

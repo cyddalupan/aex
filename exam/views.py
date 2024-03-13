@@ -72,7 +72,7 @@ def add(request, course_id):
             course = Course.objects.get(pk=course_id)
             order = Exam.objects.filter(course=course).aggregate(count=Count('id'))['count'] or 0
             if not exam["is_video"]:
-                audio_url = "static/audio/" + str(uuid.uuid4()) + ".mp3"
+                audio_url = "audio/" + str(uuid.uuid4()) + ".mp3"
                 speech_file_path = Path(__file__).parent.parent / audio_url
                 response = client.audio.speech.create(
                     model="tts-1",
@@ -112,7 +112,8 @@ def edit(request, exam_id):
     exam = {
         "title" : exam.title,
         "is_video" : exam.is_video,
-        "lesson" : exam.audio_url,
+        "audio_url" : exam.audio_url,
+        "lesson" : exam.lesson,
         "youtube" : exam.video_embed,
         "answer" : exam.answer
     }
