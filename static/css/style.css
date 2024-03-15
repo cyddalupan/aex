@@ -15,6 +15,10 @@ body {
   text-align: center;
 }
 
+.no-underline {
+  text-decoration: none !important;
+}
+
 .breadcrumb {
   display: flex;
   justify-content: center;

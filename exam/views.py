@@ -22,9 +22,11 @@ def list(request, course_id):
         return redirect(reverse('error-message'))
     course = Course.objects.get(pk=course_id)
     exams = Exam.objects.filter(course=course, deleted_at__isnull=True).order_by('order')
+    lenth_minus_one = len(exams) - 1
     return render(request, 'exam/list.html', {
         'course': course,
-        'exams': exams
+        'exams': exams,
+        'lenth_minus_one': lenth_minus_one
     })
 
 def add(request, course_id):
