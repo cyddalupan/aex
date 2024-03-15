@@ -21,7 +21,7 @@ def list(request, course_id):
     if not checkLogin(request):
         return redirect(reverse('error-message'))
     course = Course.objects.get(pk=course_id)
-    exams = Exam.objects.filter(course=course, deleted_at__isnull=True)
+    exams = Exam.objects.filter(course=course, deleted_at__isnull=True).order_by('order')
     return render(request, 'exam/list.html', {
         'course': course,
         'exams': exams
@@ -135,6 +135,21 @@ def edit(request, exam_id):
         'error_messages': error_messages,
     })
 
+def delete(request, exam_id):
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    exam = get_object_or_404(Exam, pk=exam_id)
+    course = exam.course
+    user_id = request.COOKIES.get('user_id')
+    user = EmailUser.objects.get(pk=user_id)
+    if user != course.user:
+        messages.error(request, "Login expired please login again.")
+        return redirect(reverse('error-message'))
+    exam.delete()
+    url = reverse('exam-list', args=[course.id])
+    fixSorting(course)
+    return redirect(url)
+
 def validateForm(exam):
     error_messages = []
     if not exam["title"]:
@@ -163,16 +178,10 @@ def validateForm(exam):
         error_messages.append('Answer exceeds maximum length of 800 characters.')
     return error_messages
 
-def delete(request, exam_id):
-    if not checkLogin(request):
-        return redirect(reverse('error-message'))
-    exam = get_object_or_404(Exam, pk=exam_id)
-    course = exam.course
-    user_id = request.COOKIES.get('user_id')
-    user = EmailUser.objects.get(pk=user_id)
-    if user != course.user:
-        messages.error(request, "Login expired please login again.")
-        return redirect(reverse('error-message'))
-    exam.delete()
-    url = reverse('exam-list', args=[course.id])
-    return redirect(url)
+def fixSorting(course):
+    exams = Exam.objects.filter(course=course, deleted_at__isnull=True).order_by('order')
+    orderNumber = 0
+    for exam in exams:
+        exam.order = orderNumber
+        exam.save()
+        orderNumber += 1
