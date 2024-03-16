@@ -6,4 +6,7 @@ urlpatterns = [
     path('exam-add/<int:course_id>/', views.add, name='exam-add'),
     path('exam-edit/<int:exam_id>/', views.edit, name='exam-edit'),
     path('exam-delete/<int:exam_id>/', views.delete, name='exam-delete'),
+
+    path('exam-sortup/<int:exam_id>/', views.sortup, name='exam-sortup'),
+    path('exam-sortdown/<int:exam_id>/', views.sortdown, name='exam-sortdown'),
 ]

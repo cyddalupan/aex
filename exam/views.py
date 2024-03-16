@@ -148,8 +148,47 @@ def delete(request, exam_id):
         messages.error(request, "Login expired please login again.")
         return redirect(reverse('error-message'))
     exam.delete()
-    url = reverse('exam-list', args=[course.id])
     fixSorting(course)
+    url = reverse('exam-list', args=[course.id])
+    return redirect(url)
+
+
+def sortup(request, exam_id):
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    exam = get_object_or_404(Exam, pk=exam_id)
+    course = exam.course
+    user_id = request.COOKIES.get('user_id')
+    user = EmailUser.objects.get(pk=user_id)
+    if user != course.user:
+        messages.error(request, "Login expired please login again.")
+        return redirect(reverse('error-message'))
+    new_order = exam.order-1
+    other_exam = Exam.objects.get(course = course, order=new_order, deleted_at__isnull=True)
+    other_exam.order = new_order+1
+    other_exam.save()
+    exam.order = new_order
+    exam.save()
+    url = reverse('exam-list', args=[course.id])
+    return redirect(url)
+
+def sortdown(request, exam_id):
+    if not checkLogin(request):
+        return redirect(reverse('error-message'))
+    exam = get_object_or_404(Exam, pk=exam_id)
+    course = exam.course
+    user_id = request.COOKIES.get('user_id')
+    user = EmailUser.objects.get(pk=user_id)
+    if user != course.user:
+        messages.error(request, "Login expired please login again.")
+        return redirect(reverse('error-message'))
+    new_order = exam.order+1
+    other_exam = Exam.objects.get(course = course, order=new_order, deleted_at__isnull=True)
+    other_exam.order = new_order-1
+    other_exam.save()
+    exam.order = new_order
+    exam.save()
+    url = reverse('exam-list', args=[course.id])
     return redirect(url)
 
 def validateForm(exam):

@@ -33,10 +33,10 @@
                 <span>{{ exam.title }}</span>
                 <div class="no-underline">
                     {% if exam.order != 0 %}
-                    <a class="btn btn-sm btn-secondary"><i class="fas fa-arrow-up"></i></a>
+                    <a href="{% url 'exam-sortup' exam.id %}" class="btn btn-sm btn-secondary"><i class="fas fa-arrow-up"></i></a>
                     {% endif %}
                     {% if exam.order != lenth_minus_one %}
-                    <a class="btn btn-sm btn-secondary"><i class="fas fa-arrow-down"></i></a>
+                    <a href="{% url 'exam-sortdown' exam.id %}" class="btn btn-sm btn-secondary"><i class="fas fa-arrow-down"></i></a>
                     {% endif %}
                     <a id="deleteLink" href="{% url 'exam-delete' exam.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this exam?');"><i class="fas fa-trash"></i></a>
                 </div>
