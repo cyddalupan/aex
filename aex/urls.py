@@ -26,6 +26,9 @@ urlpatterns = [
     path('course/', include('course.urls')),
     path('exam/', include('exam.urls')),
 
+    # API URL
+    path('api/', include('api.urls')),
+
     # Special URLS
     path('captcha/', include('captcha.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'captcha',
     'crispy_forms',
     'dashboard.apps.DashboardConfig',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'content.apps.ContentConfig',
     'course.apps.CourseConfig',
     'exam.apps.ExamConfig',
+    'api',
 ]
 
 MIDDLEWARE = [
