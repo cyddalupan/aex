@@ -13,15 +13,22 @@ class Chat(APIView):
         #    serializer.save()
         #    return Response(serializer.data, status=status.HTTP_201_CREATED)
         #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        message = request.data.get('message', None)
-        
-        if message is not None:
+        usermessage = request.data.get('message', None)
+
+        messages=[
+            {"role": "system", "content": "You are a friend that gives good advice. concern if I have problem. limit reply 200 characters"},
+        ]
+
+        for obj in usermessage:
+            sender = "user";
+            if obj['sender'] == "AI":
+                sender = "system";
+            messages.append({"role": sender, "content": obj['text']})
+
+        if usermessage is not None:
             completion = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are a friend that gives good advice. concern if I have problem. limit reply 200 characters"},
-                    {"role": "user", "content": message}
-                ]
+                messages=messages
             )
 
             return Response(completion.choices[0].message.content)
